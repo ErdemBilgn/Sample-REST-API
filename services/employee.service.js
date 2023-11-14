@@ -9,7 +9,12 @@ exports.getEmployeeById = (id) => {
     return employees.find(n => id === n.id);
 }
 
-exports.createEmployee = (id, name, stillEmployee) => {
-    const newEmployee = new Employee(id, name, stillEmployee);
+exports.getEmployeeIndexById = (id) => {
+    return employees.findIndex(n => id === n.id);
+}
+
+exports.createEmployee = (id, name, age, stillEmployee) => {
+    const newEmployee = new Employee(id, name, age, stillEmployee);
     return newEmployee;
 }
+

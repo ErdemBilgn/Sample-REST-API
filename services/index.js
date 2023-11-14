@@ -1,3 +1,4 @@
 const employeeService = require("./employee.service");
+const idCreator = require("./idCreator");
 
-module.exports = { employeeService };
+module.exports = { employeeService, idCreator };
