@@ -10,7 +10,7 @@ app.get("/", (req,res) => {
     res.send("Working");
 })
 
-
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use("/v1/api", routes);
 
 app.listen(PORT, () => {
