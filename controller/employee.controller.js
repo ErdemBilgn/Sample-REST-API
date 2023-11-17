@@ -1,7 +1,7 @@
+require("dotenv").config();
 const { employeeService, idCreator } = require("../services");
 const employees = require("../mock.js");
 const Employee = require("../models/employee.js");
-
 
 exports.getAllEmployees = (req,res) => {
     const employees = employeeService.getAllEmployees();
@@ -11,67 +11,50 @@ exports.getAllEmployees = (req,res) => {
 exports.getEmployeeById = (req,res) => {
     const id = parseInt(req.params.id);
     const employee = employeeService.getEmployeeById(id);
-    res.send(employee);
+    if(employee) {
+        res.send(employee);
+    }else {
+        res.status(404).send("Çalışan Bulunamadı!!")
+    }
 }
 
 exports.createEmployee = (req,res) => {
-    const data = req.body;
-    const {name, age, stillEmployee} = data;
-    const newId = idCreator.generateUniqueId();
-    console.log(newId);
-    // İsim kontrolü
-    if(!name) {
-        res.status(400).send("Lütfen bir isim giriniz!");
-        return;
-    } else {
-        if (!(typeof name === "string")){
-            res.status(400).send("Lütfen geçerli bir isim giriniz!");
-            return;
-        } 
+    try{
+        const data = req.body;
+        const newId = idCreator.generateUniqueId();   
+        const {name, age, stillEmployee} = data;
+        const employee = employeeService.createEmployee(newId, name, age, stillEmployee);
+        if(employee){
+            employees.push(employee);
+            res.status(201).send("Employee created!");
+        }  
+    } catch(err){
+        console.log(err);
+        res.status(500).send("Internal Server Error");
     }
 
-    // Yaş kontrolü
-    if(!age) {
-        res.status(400).send("Lütfen bir yaş giriniz!");
-        return;
-    } else {
-        if (!(typeof age === "number")){
-            res.status(400).send("Lütfen geçerli bir yaş giriniz!");
-            return;
-        } 
-    }
-
-    // Hala çalışan mı kontrolü
-
-    if(!stillEmployee) {
-        res.status(400).send("Lütfen çalışanın hala çalışıp çalışmadığını belirtiniz!");
-        return;
-    } else {
-        if (!(typeof stillEmployee === "boolean")){
-            res.status(400).send("Lütfen çalışanın hala çalışıp çalışmadığını istenilen formatta belirtiniz!");
-            return;
-        } 
-    }
-
-    const employee = employeeService.createEmployee(newId, name, age, stillEmployee);
-    if(employee){
-        console.log(employee);
-        employees.push(employee);
-        res.status(201).send("employee created");
-    }  
 
 }
 
 exports.updateEmployee = (req,res) => {
-    const paramId = parseInt(req.params.id);
-    const data = req.body;
-    const employeeIndex = employeeService.getEmployeeIndexById(paramId);
-    if(employeeIndex > -1) {
-        const {name, age, stillEmployee} = data;
-        const employeeToUpdate = new Employee(paramId, name, age, stillEmployee);
-        employees[employeeIndex] = employeeToUpdate;
-        res.status(202).send("Employee Updated");
+    try{
+        const paramId = parseInt(req.params.id);
+        const data = req.body;
+        const employeeIndex = employeeService.getEmployeeIndexById(paramId);
+        console.log(employeeIndex);
+        if(employeeIndex > -1) {
+            const {name, age, stillEmployee} = data;
+            const employeeToUpdate = new Employee(paramId, name, age, stillEmployee);
+            employees[employeeIndex] = employeeToUpdate;
+            res.status(202).send("Employee Updated!");
+        }else {
+            res.status(404).send("Çalışan Bulunamadı!!")
+        }
+    } catch(err){
+        console.log(err);
+        res.status(500).send("Internal Server Error");
     }
+
     
 }
 
@@ -82,6 +65,8 @@ exports.deleteEmployee = (req, res) => {
     if(employeeIndex > -1){
         console.log(employeeIndex)
         employees.splice(employeeIndex, 1);
-        res.status(200).send("employee Deleted");
+        res.status(200).send("Employee Deleted!");
+    }else {
+        res.status(404).send("Çalışan Bulunamadı!!");
     }
 }
