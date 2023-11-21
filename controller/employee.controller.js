@@ -1,16 +1,19 @@
 require("dotenv").config();
 const { employeeService, idCreator } = require("../services");
-const employees = require("../mock.js");
-const Employee = require("../models/employee.js");
+const fs = require("fs");
+const path = require('path');
 
-exports.getAllEmployees = (req,res) => {
-    const employees = employeeService.getAllEmployees();
+const dbPath = path.join(__dirname, '..', 'db.json');
+
+
+exports.getAllEmployees = async (req,res) => {
+    const employees = await employeeService.getAllEmployees();
     res.send(employees); 
 }
 
-exports.getEmployeeById = (req,res) => {
+exports.getEmployeeById = async (req,res) => {
     const id = parseInt(req.params.id);
-    const employee = employeeService.getEmployeeById(id);
+    const employee = await employeeService.getEmployeeById(id);
     if(employee) {
         res.send(employee);
     }else {
@@ -18,15 +21,20 @@ exports.getEmployeeById = (req,res) => {
     }
 }
 
-exports.createEmployee = (req,res) => {
+exports.createEmployee = async (req,res) => {
     try{
+        const dbDataString = fs.readFileSync(dbPath, "utf-8");
+        const dbData = JSON.parse(dbDataString);
         const data = req.body;
-        const newId = idCreator.generateUniqueId();   
+        const newId = await idCreator.generateUniqueId();   
         const {name, age, stillEmployee} = data;
-        const employee = employeeService.createEmployee(newId, name, age, stillEmployee);
+        const employee = await employeeService.createEmployee(newId, name, age, stillEmployee);
         if(employee){
-            employees.push(employee);
+            dbData.push(employee)
+            const dbDataStr = JSON.stringify(dbData, null, 2);
+            fs.writeFileSync(dbPath,dbDataStr);
             res.status(201).send("Employee created!");
+
         }  
     } catch(err){
         console.log(err);
@@ -36,17 +44,21 @@ exports.createEmployee = (req,res) => {
 
 }
 
-exports.updateEmployee = (req,res) => {
+exports.updateEmployee = async (req,res) => {
     try{
+        const dbDataString = fs.readFileSync(dbPath, "utf-8");
+        const dbData = JSON.parse(dbDataString);
         const paramId = parseInt(req.params.id);
         const data = req.body;
-        const employeeIndex = employeeService.getEmployeeIndexById(paramId);
+        const employeeIndex = await employeeService.getEmployeeIndexById(paramId);
         console.log(employeeIndex);
         if(employeeIndex > -1) {
             const {name, age, stillEmployee} = data;
-            const employeeToUpdate = new Employee(paramId, name, age, stillEmployee);
-            employees[employeeIndex] = employeeToUpdate;
-            res.status(202).send("Employee Updated!");
+            const employeeToUpdate = employeeService.createEmployee(paramId, name, age, stillEmployee);
+            dbData[employeeIndex] = employeeToUpdate;
+            const dbDataStr = JSON.stringify(dbData, null, 2);
+            fs.writeFileSync(dbPath,dbDataStr);
+            res.status(202).send("Çalışan Güncellendi!");
         }else {
             res.status(404).send("Çalışan Bulunamadı!!")
         }
@@ -59,12 +71,15 @@ exports.updateEmployee = (req,res) => {
 }
 
 
-exports.deleteEmployee = (req, res) => {
+exports.deleteEmployee = async (req, res) => {
+    const dbDataString = fs.readFileSync(dbPath, "utf-8");
+    const dbData = JSON.parse(dbDataString);
     const id = parseInt(req.params.id);
-    const employeeIndex = employeeService.getEmployeeIndexById(id);
+    const employeeIndex = await employeeService.getEmployeeIndexById(id);
     if(employeeIndex > -1){
-        console.log(employeeIndex)
-        employees.splice(employeeIndex, 1);
+        dbData.splice(employeeIndex, 1);
+        const dbDataStr = JSON.stringify(dbData, null, 2);
+        fs.writeFileSync(dbPath,dbDataStr);
         res.status(200).send("Employee Deleted!");
     }else {
         res.status(404).send("Çalışan Bulunamadı!!");
