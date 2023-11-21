@@ -6,21 +6,24 @@ const path = require('path');
 const dbPath = path.join(__dirname, '..', 'db.json');
 
 
+// Bütün çalışanları getir
 exports.getAllEmployees = async (req,res) => {
     const employees = await employeeService.getAllEmployees();
     res.send(employees); 
 }
 
+// Idsi verilen çalışanı getir
 exports.getEmployeeById = async (req,res) => {
     const id = parseInt(req.params.id);
     const employee = await employeeService.getEmployeeById(id);
     if(employee) {
         res.send(employee);
     }else {
-        res.status(404).send("Çalışan Bulunamadı!!")
+        res.status(404).send("Employee could not found!")
     }
 }
 
+// Çalışan oluştur
 exports.createEmployee = async (req,res) => {
     try{
         const dbDataString = fs.readFileSync(dbPath, "utf-8");
@@ -44,6 +47,7 @@ exports.createEmployee = async (req,res) => {
 
 }
 
+//Idsi verilen çalışanı güncelle
 exports.updateEmployee = async (req,res) => {
     try{
         const dbDataString = fs.readFileSync(dbPath, "utf-8");
@@ -58,9 +62,9 @@ exports.updateEmployee = async (req,res) => {
             dbData[employeeIndex] = employeeToUpdate;
             const dbDataStr = JSON.stringify(dbData, null, 2);
             fs.writeFileSync(dbPath,dbDataStr);
-            res.status(202).send("Çalışan Güncellendi!");
+            res.status(202).send("Employee updated!");
         }else {
-            res.status(404).send("Çalışan Bulunamadı!!")
+            res.status(404).send("Employee could not found!")
         }
     } catch(err){
         console.log(err);
@@ -70,7 +74,7 @@ exports.updateEmployee = async (req,res) => {
     
 }
 
-
+// Idsi verilen Çalışanı sil
 exports.deleteEmployee = async (req, res) => {
     const dbDataString = fs.readFileSync(dbPath, "utf-8");
     const dbData = JSON.parse(dbDataString);
@@ -82,6 +86,6 @@ exports.deleteEmployee = async (req, res) => {
         fs.writeFileSync(dbPath,dbDataStr);
         res.status(200).send("Employee Deleted!");
     }else {
-        res.status(404).send("Çalışan Bulunamadı!!");
+        res.status(404).send("Employee could not found!");
     }
 }

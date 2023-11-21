@@ -4,34 +4,34 @@ exports.checkPostData = (req, res, next) => {
 
     // İsim kontrolü
     if(!name) {
-        res.status(400).send("Lütfen bir isim giriniz!");
+        res.status(400).send("Please send a name!");
         return;
     } else {
         if (!(typeof name === "string")){
-            res.status(400).send("Lütfen geçerli bir isim giriniz!");
+            res.status(400).send("Please send a valid name!");
             return;
         } 
     }
 
     // Yaş kontrolü
     if(!age) {
-        res.status(400).send("Lütfen bir yaş giriniz!");
+        res.status(400).send("Please send an age!");
         return;
     } else {
         if (!(typeof age === "number")){
-            res.status(400).send("Lütfen geçerli bir yaş giriniz!");
+            res.status(400).send("Please send a valid age!");
             return;
         } 
     }
 
     // Hala çalışan mı kontrolü
 
-    if(!stillEmployee) {
-        res.status(400).send("Lütfen çalışanın hala çalışıp çalışmadığını belirtiniz!");
+    if(stillEmployee == undefined) {
+        res.status(400).send("Please send a stillEmployee!");
         return;
     } else {
         if (!(typeof stillEmployee === "boolean")){
-            res.status(400).send("Lütfen çalışanın hala çalışıp çalışmadığını istenilen formatta belirtiniz!");
+            res.status(400).send("Please send a valid stillEmployee!");
             return;
         } 
     }

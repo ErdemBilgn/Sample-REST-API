@@ -6,7 +6,7 @@ const middlewares = require("./middlewares");
 const app = express();
 
 app.use(bodyParser.json());
-app.use(middlewares.headerChecker.checkHeaders);
+app.use(middlewares.headerChecker.checkHeaders); // Header kontrolü yapan middleware'i çağırır.
 app.use("/v1/api", routes);
 
 app.listen(process.env.PORT, () => {
