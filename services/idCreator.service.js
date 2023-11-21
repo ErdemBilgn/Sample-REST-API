@@ -1,3 +1,5 @@
+
+// Benzersiz, 12 haneli bir Id oluşturup gönderir
 exports.generateUniqueId = () => {
     const timestamp = Date.now().toString().substring(8,12);
     const random = Math.random().toString().substring(2,10);

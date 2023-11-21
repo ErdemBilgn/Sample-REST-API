@@ -36,8 +36,7 @@ exports.createEmployee = async (req,res) => {
             dbData.push(employee)
             const dbDataStr = JSON.stringify(dbData, null, 2);
             fs.writeFileSync(dbPath,dbDataStr);
-            res.status(201).send("Employee created!");
-
+            res.status(201).send(`Employee Created with an id of ${employee.id}!`);
         }  
     } catch(err){
         console.log(err);
@@ -62,7 +61,7 @@ exports.updateEmployee = async (req,res) => {
             dbData[employeeIndex] = employeeToUpdate;
             const dbDataStr = JSON.stringify(dbData, null, 2);
             fs.writeFileSync(dbPath,dbDataStr);
-            res.status(202).send("Employee updated!");
+            res.status(202).send(`Employee updated with an id of ${paramId}!`);
         }else {
             res.status(404).send("Employee could not found!")
         }
@@ -84,7 +83,7 @@ exports.deleteEmployee = async (req, res) => {
         dbData.splice(employeeIndex, 1);
         const dbDataStr = JSON.stringify(dbData, null, 2);
         fs.writeFileSync(dbPath,dbDataStr);
-        res.status(200).send("Employee Deleted!");
+        res.status(200).send(`Employee Deleted with an id of ${id}!`);
     }else {
         res.status(404).send("Employee could not found!");
     }
