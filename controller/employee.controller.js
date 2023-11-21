@@ -9,7 +9,7 @@ const dbPath = path.join(__dirname, '..', 'db.json');
 // Bütün çalışanları getir
 exports.getAllEmployees = async (req,res) => {
     const employees = await employeeService.getAllEmployees();
-    res.send(employees); 
+    res.status(200).send(employees); 
 }
 
 // Idsi verilen çalışanı getir
@@ -17,7 +17,7 @@ exports.getEmployeeById = async (req,res) => {
     const id = parseInt(req.params.id);
     const employee = await employeeService.getEmployeeById(id);
     if(employee) {
-        res.send(employee);
+        res.status(200).send(employee);
     }else {
         res.status(404).send("Employee could not found!")
     }
