@@ -1,6 +1,4 @@
-# Timus-Bootcamp-Odev2
-
-Timus Full Stack Bootcamp 2.Ödev
+# Ödev 2
 
 Yereldeki json dosyaları üzerinden çalışan kayıt API oluşturma
 
@@ -24,3 +22,4 @@ Yereldeki json dosyaları üzerinden çalışan kayıt API oluşturma
 - id si gönderilen çalışanın silindiği bir method olacak
 - id si gönderilen çalışanın verilerinin update edildiği bir method olacak (varsa
   zorunlu verilerin tipleri kontrol edilecek ve id değiştirmeye izin verilmeyecek)
+  > > > > > > > c20476c4fdce3a35b2131cc8476a98e67ea7035a
