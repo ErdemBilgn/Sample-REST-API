@@ -1,8 +1,6 @@
-require("dotenv").config();
 const { employeeService, idCreator } = require("../services");
 const fs = require("fs");
 const path = require('path');
-
 const dbPath = path.join(__dirname, '..', 'db.json');
 
 
