@@ -1,4 +1,4 @@
-# Ödev 2
+# Sample API (Çalışan Kayıt)
 
 Yereldeki json dosyaları üzerinden çalışan bir kayıt API oluşturuldu
 
